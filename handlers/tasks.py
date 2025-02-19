@@ -27,6 +27,10 @@ async def complete_task(message: types.Message):
 async def handle_task_input(message: types.Message):
     user_id = str(message.from_user.id)
 
+    # Проверяем, не является ли сообщение одной из команд-кнопок
+    if message.text in ["📊 Мой прогресс", "📩 Оставить отзыв", "📋 Список задач", "✅ Завершить задачу"]:
+        return  # Передаем обработку дальше, не перехватываем это сообщение
+
     if waiting_for_task.get(user_id, False):
         task_description = message.text.strip()
         if task_description:
@@ -64,6 +68,3 @@ async def handle_task_input(message: types.Message):
         return
 
     await message.answer("⚠️ Используйте кнопки для взаимодействия с ботом.")
-
-def register_handlers(dp):
-    dp.include_router(task_router)
